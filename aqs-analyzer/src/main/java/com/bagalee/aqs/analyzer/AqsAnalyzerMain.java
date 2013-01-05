@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.bagalee.aqs.analyzer.dataobjects.LocationDao;
 import com.bagalee.aqs.schema.jaxb.AirQualityGeoCodedDataType;
@@ -60,6 +61,7 @@ public class AqsAnalyzerMain
     }
     
     private static Set<LocationDao> locationSet = new HashSet<LocationDao>();
+    private static Set<XMLGregorianCalendar> dateSet = new HashSet<XMLGregorianCalendar>();
 
     private static void analyze(List<MeasurementEntityType> measurementList)
     {
@@ -68,6 +70,9 @@ public class AqsAnalyzerMain
         
         for (MeasurementEntityType measurement : measurementList)
         {   
+            
+            /***
+            // Add location to location set
             LocationType geoLocation = measurement.getGeographicalLocation();
             
             // TODO: use transformer: measurement --> location Dao
@@ -76,8 +81,12 @@ public class AqsAnalyzerMain
                     geoLocation.getLongitudeMeasure(),
                     geoLocation.getVerticalMeasure().getVerticalMeasureValue(),
                     geoLocation.getVerticalMeasure().getVerticalMeasureUnit());
+            locationSet.add(locationDao);
+            ***/
             
-            locationSet.add(locationDao);   
+            // Add date to date set
+            dateSet.add(measurement.getDate());
+            
         }
         
         System.out.println("Locations(" + locationSet.size() + "):");
@@ -85,6 +94,12 @@ public class AqsAnalyzerMain
         for (LocationDao loc : locationSet)
         {
             System.out.println(loc);
+        }
+        
+        System.out.println("\n\nDates(" + dateSet.size() + "):");
+        for (XMLGregorianCalendar date : dateSet)
+        {
+            System.out.println(date);
         }
     }
 }
